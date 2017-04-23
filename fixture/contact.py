@@ -84,3 +84,14 @@ class ContactHelper:
         wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
         # confirm deletion
         wd.switch_to_alert().accept()
+
+    def edit_first_contact(self):
+        wd = self.app.wd
+        # click edit icon
+        wd.find_element_by_xpath("//*[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        # deleting some information
+        wd.find_element_by_name("address").click()
+        wd.find_element_by_name("address").clear()
+        # confirm update
+        wd.find_element_by_name("update").click()
+
