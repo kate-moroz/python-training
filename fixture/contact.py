@@ -87,11 +87,33 @@ class ContactHelper:
 
     def edit_first_contact(self):
         wd = self.app.wd
-        # click edit icon
-        wd.find_element_by_xpath("//*[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        self.enter_editing_mode()
         # deleting some information
         wd.find_element_by_name("address").click()
         wd.find_element_by_name("address").clear()
         # confirm update
         wd.find_element_by_name("update").click()
 
+    def modify_first_contact(self, new_contact_data):
+        wd = self.app.wd
+        self.enter_editing_mode()
+        self.fill_contact_form(new_contact_data)
+        # submit modification
+        wd.find_element_by_name("update").click()
+
+    def fill_contact_form(self, contact):
+        wd = self.app.wd
+        self.change_field_value("firstname", contact.fname)
+        self.change_field_value("middlename", contact.mname)
+        self.change_field_value("lastname", contact.lname)
+
+    def change_field_value(self, field_name, text):
+        wd = self.app.wd
+        if text is not None:
+            wd.find_element_by_name(field_name).click()
+            wd.find_element_by_name(field_name).clear()
+            wd.find_element_by_name(field_name).send_keys(text)
+
+    def enter_editing_mode(self):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//*[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
