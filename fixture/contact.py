@@ -6,7 +6,8 @@ class ContactHelper:
     def create(self, contact):
         wd = self.app.wd
         # init contact creation
-        wd.find_element_by_link_text("add new").click()
+        if not wd.current_url.endswith("/edit.php"):
+            wd.find_element_by_link_text("add new").click()
         # fill contact form
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -19,15 +20,23 @@ class ContactHelper:
         wd.find_element_by_name("lastname").send_keys(contact.lname)
         # submit contact creation
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        self.return_to_homepage(wd)
+
+    def return_to_homepage(self, wd):
+        wd = self.app.wd
+        if not(wd.current_url.endswith("/index.php") and len(wd.find_elements_by_name("searchstring")) > 0):
+            wd.find_element_by_link_text("home").click()
 
     def delete_first_contact(self):
         wd = self.app.wd
+        self.return_to_homepage(wd)
         # select first contact
         wd.find_element_by_name("selected[]").click()
         # submit deletion
         wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
         # confirm deletion
         wd.switch_to_alert().accept()
+        self.return_to_homepage(wd)
 
     def edit_first_contact(self):
         wd = self.app.wd
@@ -40,10 +49,12 @@ class ContactHelper:
 
     def modify_first_contact(self, new_contact_data):
         wd = self.app.wd
+        self.return_to_homepage(wd)
         self.enter_editing_mode()
         self.fill_contact_form(new_contact_data)
         # submit modification
         wd.find_element_by_name("update").click()
+        self.return_to_homepage(wd)
 
     def fill_contact_form(self, contact):
         wd = self.app.wd
