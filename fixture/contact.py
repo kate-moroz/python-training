@@ -1,3 +1,5 @@
+from model.contact import Contact
+
 class ContactHelper:
 
     def __init__(self, app):
@@ -77,3 +79,11 @@ class ContactHelper:
         wd = self.app.wd
         return len(wd.find_elements_by_name("selected[]"))
 
+    def get_contact_list(self):
+        wd = self.app.wd
+        groups = []
+        for element in wd.find_elements_by_name("entry"):
+            text = element.text
+            element.find_element_by_name("selected[]").get_attribute("value")
+            groups.append(Contact(fname=text, id=id))
+        return groups
